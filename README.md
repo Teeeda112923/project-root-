@@ -29,7 +29,9 @@ STATUS_PREFIX=【注目記事】
 TEST_MODE=true  # trueにすると投稿せずログ出力のみ
 ※ .env を使うには python-dotenv を導入してください（このスクリプトでは未使用です）。
 
+
 ### 3. スクリプトを実行
+
 
 python post.py
 ✅ 環境変数一覧
@@ -43,7 +45,9 @@ HASHTAGS	任意	投稿時に末尾に追加されるハッシュタグ（複数�
 STATUS_PREFIX	任意	投稿文の冒頭に追加されるプレフィックス例: 【アーカイブ】など
 TEST_MODE	任意	trueにすると投稿せずログのみ出力
 
+
 ## 📦 GitHub Actions での利用例
+
 
 name: Post to X
 
@@ -75,14 +79,19 @@ jobs:
       - name: Run poster
         run: python post.py
 
+
 ## ❗ 注意事項
+
+
 X APIのアクセスレベル制限 により、EssentialプランではPOST /2/tweetsが使用できないことがあります。
 
 エラーが出る場合は Elevated または Academic Research への申請が必要です。
 
 詳細: https://developer.x.com/en/portal/product
 
+
 ## 📄 ライセンス
+
 
 改変・拡張する場合は以下URLから一報ください。 （基本的にはNGを出しません。共有OKであれば本サイトで紹介します。）
 URL：https://www.cybernote.click/contact/
