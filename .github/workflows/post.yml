@@ -1,9 +1,9 @@
-name: PostToX
+name: AutoPostToX
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'  # 毎日3時（UTC）
+    - cron: '0 * * * *'
 
 jobs:
   post:
@@ -17,10 +17,11 @@ jobs:
       FEED_URL: ${{ secrets.FEED_URL }}
       HASHTAGS: ${{ secrets.HASHTAGS }}
       STATUS_PREFIX: ${{ secrets.STATUS_PREFIX }}
-      TEST_MODE: 'false'  # テスト時は true に変更可能
+      TEST_MODE: 'false'
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,7 +29,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install feedparser tweepy
+        run: pip install -r requirements.txt
 
-      - name: Run post.py
+      - name: Run script
         run: python post.py
