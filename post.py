@@ -1,6 +1,7 @@
 import os
 import feedparser
 import random
+import openai
 import tweepy
 
 # === APIキー読み込み ===
@@ -36,18 +37,10 @@ def get_random_article(feed_url):
     print(f"🎯 選ばれた記事: {selected.title} / {selected.link}")
     return selected.title, selected.link
 
-# === X（Twitter）v2 APIで投稿 ===
-def post_to_x(title, link):
-    print("🐦 投稿準備中...")
 
-    status = f"{status_prefix}\n{title}\n{link}\n{hashtags}"
-    print("📤 投稿内容:")
-    print(status)
-
-    if test_mode:
-        print("🧪 TEST_MODE: 投稿せずログ出力のみ")
-        return
-
+# === X（Twitter）へ投稿（API v2）===
+def post_to_x(title, link, comment):
+    print("🐦 X(Twitter)へ投稿準備中...")
     try:
         client = tweepy.Client(
             consumer_key=consumer_key,
@@ -55,17 +48,29 @@ def post_to_x(title, link):
             access_token=access_token,
             access_token_secret=access_token_secret
         )
-        response = client.create_tweet(text=status)
-        print("✅ 投稿成功")
-        print(f"Tweet ID: {response.data['id']}")
+
+        hashtags = "#cybernote #ブログ仲間と繋がりたい #Webライター"
+        status = f"{status_prefix}\n{comment}\n\n{title}\n{link}\n\n{hashtags}"
+
+        print("📤 投稿内容:")
+        print(status)
+
+        if os.environ.get('TEST_MODE') == 'true':
+            print("🧪 TEST_MODE: 投稿せずログ出力のみ")
+        else:
+            response = client.create_tweet(text=status)
+            print("✅ 投稿成功")
+            print(response)
     except Exception as e:
         print(f"❌ 投稿エラー: {e}")
         raise
 
 # === メイン処理 ===
 def main():
+    feed_url = "https://www.cybernote.click/?cat=4&feed=rss2"
     title, link = get_random_article(feed_url)
-    post_to_x(title, link)
+    comment = generate_comment(title)
+    post_to_x(title, link, comment)
 
 if __name__ == "__main__":
     main()
